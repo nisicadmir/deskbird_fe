@@ -1,1 +1,9 @@
-<p>user-list works!</p>
+<div class="user-list-container">
+  <ul>
+    @for (user of users; track user.id) {
+    <li>
+      <span>{{ user.email }}</span>
+    </li>
+    }
+  </ul>
+</div>
