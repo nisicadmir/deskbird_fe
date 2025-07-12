@@ -1,10 +1,16 @@
 import { Component } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ReactiveFormsModule } from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { Router } from "@angular/router";
 import { ButtonModule } from "primeng/button";
+import { IftaLabelModule } from "primeng/iftalabel";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
-import { IftaLabelModule } from "primeng/iftalabel";
+import { Http } from "../http";
 
 @Component({
   selector: "app-sign-in",
@@ -19,8 +25,25 @@ import { IftaLabelModule } from "primeng/iftalabel";
   styleUrl: "./sign-in.scss",
 })
 export class SignIn {
+  constructor(private http: Http, private router: Router) {}
+
   public formGroup = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [Validators.required]),
   });
+
+  onSubmit() {
+    console.log(this.formGroup.value);
+    if (this.formGroup.valid) {
+      this.http
+        .post<{ status: string; data: { accessToken: string } }>(
+          "/auth/sign-in",
+          this.formGroup.value
+        )
+        .subscribe((res) => {
+          localStorage.setItem("token", res.data.accessToken);
+          this.router.navigate(["/"]);
+        });
+    }
+  }
 }

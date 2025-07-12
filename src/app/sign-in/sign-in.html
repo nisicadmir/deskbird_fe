@@ -19,7 +19,11 @@
           <label for="password">Password</label>
         </p-iftalabel>
       </div>
-      <p-button label="Sign In" styleClass="p-button-lg" />
+      <p-button
+        label="Sign In"
+        styleClass="p-button-lg"
+        (onClick)="onSubmit()"
+      />
     </form>
   </div>
 </div>
