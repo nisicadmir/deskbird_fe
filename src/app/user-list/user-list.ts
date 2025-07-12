@@ -14,6 +14,7 @@ import { Auth } from "../services/auth";
 import { ActivatedRoute } from "@angular/router";
 import { DynamicDialogModule, DialogService } from "primeng/dynamicdialog";
 import { UserUpsertDialog } from "./user-upsert-dialog/user-upsert-dialog";
+import { AdminPipe } from "../pipes/admin.pipe";
 
 @Component({
   selector: "app-user-list",
@@ -28,6 +29,7 @@ import { UserUpsertDialog } from "./user-upsert-dialog/user-upsert-dialog";
     ReactiveFormsModule,
     ToastModule,
     DynamicDialogModule,
+    AdminPipe,
   ],
   providers: [MessageService, DialogService],
   templateUrl: "./user-list.html",

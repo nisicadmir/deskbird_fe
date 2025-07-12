@@ -6,6 +6,7 @@
       <div class="p-toolbar-group-left">
         <h1>User List</h1>
         <p-button
+          *ngIf="meData | isAdmin"
           label="Create User"
           (onClick)="createUser()"
           styleClass="p-button-primary"
@@ -33,7 +34,7 @@
           <th>Role</th>
           <th>Created At</th>
           <th>Updated At</th>
-          <th>Actions</th>
+          <th *ngIf="meData | isAdmin">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-user>
@@ -44,7 +45,7 @@
           <td>{{ user.role }}</td>
           <td>{{ user.createdAt | date }}</td>
           <td>{{ user.updatedAt | date }}</td>
-          <td>
+          <td *ngIf="meData | isAdmin">
             <p-button
               label="Edit"
               severity="primary"
