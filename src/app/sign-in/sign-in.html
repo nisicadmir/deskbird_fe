@@ -1,6 +1,6 @@
 <div class="sign-in-container">
   <div class="sign-in-form">
-    <h1>Sign In</h1>
+    <h1 class="text-center">Sign In</h1>
     <form [formGroup]="formGroup">
       <div class="p-field">
         <p-iftalabel>
@@ -10,7 +10,12 @@
       </div>
       <div class="p-field">
         <p-iftalabel>
-          <input pInputText id="password" formControlName="password" />
+          <input
+            pInputText
+            id="password"
+            formControlName="password"
+            type="password"
+          />
           <label for="password">Password</label>
         </p-iftalabel>
       </div>
