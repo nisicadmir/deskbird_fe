@@ -11,6 +11,7 @@ import { IftaLabelModule } from "primeng/iftalabel";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { Http } from "../http";
+import { Auth } from "../services/auth";
 
 @Component({
   selector: "app-sign-in",
@@ -25,7 +26,7 @@ import { Http } from "../http";
   styleUrl: "./sign-in.scss",
 })
 export class SignIn {
-  constructor(private http: Http, private router: Router) {}
+  constructor(private http: Http, private router: Router, private auth: Auth) {}
 
   public formGroup = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -41,7 +42,7 @@ export class SignIn {
           this.formGroup.value
         )
         .subscribe((res) => {
-          localStorage.setItem("access_token", res.data.accessToken);
+          this.auth.setAccessToken(res.data.accessToken);
           this.router.navigate(["/"]);
         });
     }

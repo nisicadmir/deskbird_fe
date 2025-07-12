@@ -1,15 +1,16 @@
 import { CanActivateFn } from "@angular/router";
 import { inject } from "@angular/core";
 import { Router } from "@angular/router";
+import { Auth } from "../services/auth";
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const accessToken = localStorage.getItem("access_token");
+  const auth = inject(Auth);
 
-  if (accessToken) {
+  if (auth.getAccessToken()) {
     return true; // Token found, allow access
   } else {
-    router.navigate(["/sign-in"]);
+    auth.logout();
     return false; // No token found, deny access
   }
 };

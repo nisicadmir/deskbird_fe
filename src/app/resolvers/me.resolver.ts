@@ -1,11 +1,10 @@
-import { ResolveFn } from "@angular/router";
 import { inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable, of } from "rxjs";
-import { map, catchError } from "rxjs/operators";
-import { UserResponseModel } from "../models/user.model";
-import { Router } from "@angular/router";
+import { ResolveFn, Router } from "@angular/router";
+import { of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { Http } from "../http";
+import { UserResponseModel } from "../models/user.model";
+import { Auth } from "../services/auth";
 
 export interface UserResolveResult {
   user?: UserResponseModel;
@@ -15,10 +14,10 @@ export interface UserResolveResult {
 export const meResolver: ResolveFn<UserResolveResult> = (route, state) => {
   const http = inject(Http);
   const router = inject(Router);
-  const accessToken = localStorage.getItem("access_token");
+  const auth = inject(Auth);
 
-  if (!accessToken) {
-    router.navigate(["/sign-in"]);
+  if (!auth.getAccessToken()) {
+    auth.logout();
     return of({ error: "No access token" });
   }
 
@@ -32,12 +31,12 @@ export const meResolver: ResolveFn<UserResolveResult> = (route, state) => {
         if (response.status === "ok") {
           return { user: response.data.user };
         }
-        router.navigate(["/sign-in"]);
+        auth.logout();
         return { error: "Invalid response status" };
       }),
       catchError((error) => {
         console.error("User fetch failed:", error);
-        router.navigate(["/sign-in"]);
+        auth.logout();
         return of({ error });
       })
     );
