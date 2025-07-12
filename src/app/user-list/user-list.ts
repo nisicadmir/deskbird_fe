@@ -15,6 +15,7 @@ import { ActivatedRoute } from "@angular/router";
 import { DynamicDialogModule, DialogService } from "primeng/dynamicdialog";
 import { UserUpsertDialog } from "./user-upsert-dialog/user-upsert-dialog";
 import { AdminPipe } from "../pipes/admin.pipe";
+import { LoaderService } from "../services/loader.service";
 
 @Component({
   selector: "app-user-list",
@@ -44,7 +45,8 @@ export class UserList {
     private auth: Auth,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private loaderService: LoaderService
   ) {
     this.meData = this.route.snapshot.data["meData"][
       "meData"
@@ -52,14 +54,22 @@ export class UserList {
   }
 
   ngOnInit() {
+    this.loaderService.show();
     this.http
       .get<{ status: string; data: UserResponseModel[] }>("/user/list", true)
-      .subscribe((users) => {
-        this.users = users.data;
+      .subscribe({
+        next: (users) => {
+          this.users = users.data;
+          this.loaderService.hide();
+        },
+        error: () => {
+          this.loaderService.hide();
+        },
       });
   }
 
   public deleteUser(id: number) {
+    this.loaderService.show();
     this.http.delete<{ status: string }>(`/user/${id}`, true).subscribe({
       next: () => {
         this.users = this.users.filter((user) => user.id !== id);
@@ -68,6 +78,7 @@ export class UserList {
           summary: "Success",
           detail: "User deleted successfully",
         });
+        this.loaderService.hide();
       },
       error: (err) => {
         console.error("User deletion failed", err);
@@ -76,6 +87,7 @@ export class UserList {
           summary: "Error",
           detail: "Failed to delete user",
         });
+        this.loaderService.hide();
       },
     });
   }

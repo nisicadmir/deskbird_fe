@@ -23,6 +23,7 @@ import {
   UserCreateModel,
   UserUpdateModel,
 } from "../../models/user.model";
+import { LoaderService } from "../../services/loader.service";
 
 @Component({
   selector: "app-user-upsert-dialog",
@@ -57,7 +58,8 @@ export class UserUpsertDialog implements OnInit {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private http: Http,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit() {
@@ -99,13 +101,16 @@ export class UserUpsertDialog implements OnInit {
         role: value.role,
       };
 
+      this.loaderService.show();
       this.http
         .put<{ status: string }>(`/user/${this.user.id}`, updateData, true)
         .subscribe({
           next: () => {
+            this.loaderService.hide();
             this.ref.close({ ...this.user, ...updateData });
           },
           error: (err) => {
+            this.loaderService.hide();
             console.error("User update failed", err);
             this.messageService.add({
               severity: "error",
@@ -122,6 +127,7 @@ export class UserUpsertDialog implements OnInit {
         role: value.role,
       };
 
+      this.loaderService.show();
       this.http
         .post<{ status: string; data: UserResponseModel }>(
           `/user`,
@@ -130,6 +136,7 @@ export class UserUpsertDialog implements OnInit {
         )
         .subscribe({
           next: (res) => {
+            this.loaderService.hide();
             this.ref.close(res.data);
           },
           error: (err) => {

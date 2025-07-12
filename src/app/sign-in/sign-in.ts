@@ -12,6 +12,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { Http } from "../http";
 import { Auth } from "../services/auth";
+import { LoaderService } from "../services/loader.service";
 
 @Component({
   selector: "app-sign-in",
@@ -26,7 +27,12 @@ import { Auth } from "../services/auth";
   styleUrl: "./sign-in.scss",
 })
 export class SignIn {
-  constructor(private http: Http, private router: Router, private auth: Auth) {}
+  constructor(
+    private http: Http,
+    private router: Router,
+    private auth: Auth,
+    private loaderService: LoaderService
+  ) {}
 
   public formGroup = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -34,16 +40,22 @@ export class SignIn {
   });
 
   onSubmit() {
-    console.log(this.formGroup.value);
     if (this.formGroup.valid) {
+      this.loaderService.show();
       this.http
         .post<{ status: string; data: { accessToken: string } }>(
           "/auth/sign-in",
           this.formGroup.value
         )
-        .subscribe((res) => {
-          this.auth.setAccessToken(res.data.accessToken);
-          this.router.navigate(["/"]);
+        .subscribe({
+          next: (res) => {
+            this.loaderService.hide();
+            this.auth.setAccessToken(res.data.accessToken);
+            this.router.navigate(["/"]);
+          },
+          error: () => {
+            this.loaderService.hide();
+          },
         });
     }
   }
