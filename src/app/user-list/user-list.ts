@@ -6,12 +6,14 @@ import { ToolbarModule } from "primeng/toolbar";
 import { DialogModule } from "primeng/dialog";
 import { InputTextModule } from "primeng/inputtext";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MessageService } from "primeng/api"; // Added for user-facing messages
-import { ToastModule } from "primeng/toast"; // Added for toast notifications
+import { MessageService } from "primeng/api";
+import { ToastModule } from "primeng/toast";
 import { Http } from "../http";
 import { UserResponseModel } from "../models/user.model";
 import { Auth } from "../services/auth";
 import { ActivatedRoute } from "@angular/router";
+import { DynamicDialogModule, DialogService } from "primeng/dynamicdialog";
+import { UserUpsertDialog } from "./user-upsert-dialog/user-upsert-dialog";
 
 @Component({
   selector: "app-user-list",
@@ -25,22 +27,22 @@ import { ActivatedRoute } from "@angular/router";
     FormsModule,
     ReactiveFormsModule,
     ToastModule,
-  ], // Updated imports array
-  providers: [MessageService], // Provide MessageService at component level, or move to app.config.ts for global use
+    DynamicDialogModule,
+  ],
+  providers: [MessageService, DialogService],
   templateUrl: "./user-list.html",
   styleUrl: "./user-list.scss",
 })
 export class UserList {
   public users: UserResponseModel[] = [];
   public meData: UserResponseModel;
-  public displayEditDialog: boolean = false;
-  public selectedUser: UserResponseModel | null = null;
 
   constructor(
     private http: Http,
     private auth: Auth,
     private route: ActivatedRoute,
-    private messageService: MessageService // Added for error/success notifications
+    private messageService: MessageService,
+    private dialogService: DialogService
   ) {
     this.meData = this.route.snapshot.data["meData"][
       "meData"
@@ -76,8 +78,45 @@ export class UserList {
     });
   }
 
-  public createUser() {}
-  public editUser(user: UserResponseModel) {}
+  public createUser() {
+    const ref = this.dialogService.open(UserUpsertDialog, {
+      header: "Create User",
+      width: "50%",
+    });
+
+    ref.onClose.subscribe((newUser: UserResponseModel) => {
+      if (newUser) {
+        this.users.push(newUser);
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "User created successfully",
+        });
+      }
+    });
+  }
+
+  public editUser(user: UserResponseModel) {
+    const ref = this.dialogService.open(UserUpsertDialog, {
+      header: "Edit User",
+      width: "50%",
+      data: { user },
+    });
+
+    ref.onClose.subscribe((updatedUser: UserResponseModel) => {
+      if (updatedUser) {
+        const index = this.users.findIndex((u) => u.id === updatedUser.id);
+        if (index !== -1) {
+          this.users[index] = updatedUser;
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "User updated successfully",
+          });
+        }
+      }
+    });
+  }
 
   public logout() {
     this.auth.logout();

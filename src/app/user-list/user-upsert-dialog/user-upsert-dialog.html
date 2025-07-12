@@ -1,1 +1,52 @@
-<p>user-upsert-dialog works!</p>
+<p-toast></p-toast>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="p-fluid">
+    <div class="p-field">
+      <p-iftalabel>
+        <input pInputText id="email" formControlName="email" />
+        <label for="email">Email</label>
+      </p-iftalabel>
+    </div>
+    <div class="p-field">
+      <p-iftalabel>
+        <input pInputText id="fullName" formControlName="fullName" />
+        <label for="fullName">Full Name</label>
+      </p-iftalabel>
+    </div>
+    <div class="p-field" *ngIf="!isEdit">
+      <p-iftalabel>
+        <input
+          pInputText
+          id="password"
+          formControlName="password"
+          type="password"
+        />
+        <label for="password">Password</label>
+      </p-iftalabel>
+    </div>
+    <div class="p-field">
+      <p-iftalabel>
+        <p-select
+          id="role"
+          formControlName="role"
+          [options]="roles"
+          optionLabel="label"
+          optionValue="value"
+        ></p-select>
+        <label for="role">Role</label>
+      </p-iftalabel>
+    </div>
+  </div>
+  <div class="p-dialog-footer">
+    <p-button
+      label="Cancel"
+      (onClick)="cancel()"
+      styleClass="p-button-text"
+    ></p-button>
+    <p-button
+      label="Save"
+      type="submit"
+      styleClass="p-button-raised"
+    ></p-button>
+  </div>
+</form>
