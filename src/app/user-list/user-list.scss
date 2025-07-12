@@ -4,11 +4,26 @@
 
 .header {
   margin-bottom: 20px;
+  .p-toolbar-group-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    p-button {
+      margin-left: 20px;
+    }
+  }
 }
 
 .data {
   overflow: auto;
-  max-height: 400px; /* Adjust as needed; makes the div scrollable if content overflows */
+  max-height: calc(
+    100vh - var(--p-toolbar-height, 56px) - var(--p-toolbar-padding, 16px) * 2 -
+      var(--page-padding, 20px) * 2
+  ); /* Accounts for toolbar height, its padding, and page padding */
+  p-button:first-child {
+    margin-right: 10px;
+  }
 }
 
 .data .p-datatable-thead > tr > th {

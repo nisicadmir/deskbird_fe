@@ -47,6 +47,8 @@ export class UserList {
       },
     });
   }
+  public createUser() {}
+  public editUser(user: UserResponseModel) {}
 
   public logout() {
     this.auth.logout();
