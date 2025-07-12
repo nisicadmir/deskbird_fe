@@ -9,12 +9,16 @@ import { providePrimeNG } from "primeng/config";
 import Aura from "@primeuix/themes/aura";
 import { routes } from "./app.routes";
 import { generalInterceptor } from "./general.interceptor";
-import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import {
+  provideHttpClient,
+  withInterceptors,
+  withFetch,
+} from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withInterceptors([generalInterceptor])),
+    provideHttpClient(withInterceptors([generalInterceptor]), withFetch()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),

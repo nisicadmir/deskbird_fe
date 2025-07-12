@@ -41,7 +41,7 @@ export class SignIn {
           this.formGroup.value
         )
         .subscribe((res) => {
-          localStorage.setItem("token", res.data.accessToken);
+          localStorage.setItem("access_token", res.data.accessToken);
           this.router.navigate(["/"]);
         });
     }
