@@ -1,0 +1,20 @@
+<div class="sign-in-container">
+  <div class="sign-in-form">
+    <h1>Sign In</h1>
+    <form [formGroup]="formGroup">
+      <div class="p-field">
+        <p-iftalabel>
+          <input pInputText id="email" formControlName="email" />
+          <label for="email">Email</label>
+        </p-iftalabel>
+      </div>
+      <div class="p-field">
+        <p-iftalabel>
+          <input pInputText id="password" formControlName="password" />
+          <label for="password">Password</label>
+        </p-iftalabel>
+      </div>
+      <p-button label="Sign In" styleClass="p-button-lg" />
+    </form>
+  </div>
+</div>
