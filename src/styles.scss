@@ -71,3 +71,11 @@ body {
     width: 100%;
   }
 }
+
+/* Custom styling for toast to use absolute positioning */
+.p-toast {
+  position: absolute !important; /* Override default fixed positioning */
+  top: 20px; /* Adjust as needed */
+  right: 20px; /* Adjust as needed */
+  z-index: 1000; /* Ensure it's above other elements */
+}
