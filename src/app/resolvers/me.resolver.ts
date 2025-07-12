@@ -29,7 +29,7 @@ export const meResolver: ResolveFn<UserResolveResult> = (route, state) => {
     .pipe(
       map((response) => {
         if (response.status === "ok") {
-          return { user: response.data.user };
+          return { meData: response.data.user };
         }
         auth.logout();
         return { error: "Invalid response status" };

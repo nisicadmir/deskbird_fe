@@ -1,0 +1,26 @@
+.user-list-container {
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.data {
+  overflow: auto;
+  max-height: 400px; /* Adjust as needed; makes the div scrollable if content overflows */
+}
+
+.data .p-datatable-thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(
+    --surface-0
+  ); /* Use PrimeNG theme variable for background to match theme; adjust if needed */
+}
+
+.welcome-message {
+  margin-right: 10px;
+  align-self: center;
+}
